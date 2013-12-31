@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/FillingArrayWithLoop/bin/Debug
+/FillingArrayWithLoop/obj/Debug
+/Prototyping.v12.suo
