@@ -5,10 +5,10 @@ namespace FillingArrayWithLoop {
     class Program {
         static void Main() {
 
-            const int numberOfColumns = 10;
-            const int numberofRows = 10;
-            const int numberOfPlanes = 2;
-            const int numberOfCuboids = 2;
+            const int numberOfColumns      = 2;
+            const int numberofRows         = 2;
+            const int numberOfPlanes       = 2;
+            const int numberOfCuboids      = 2;
             const int numberOfHyperCuboids = 2;
 
             var myArray = new int[
@@ -25,30 +25,46 @@ namespace FillingArrayWithLoop {
         }
 
         private static void Fill<T>(Array thisArray, Func<T> withThat) {
-            var rank = thisArray.Rank;
-            var indices = new int[rank];
-            var dimensions = new int[rank + 1];
+
+            var rank               = thisArray.Rank;
+            var indices            = new int[rank];
+            var dimensions         = GetDimensionsFrom(thisArray);
             var lengthOfDimensions = dimensions.Length;
+            var numberOfElements   = dimensions.Last();
 
-            dimensions[0] = 1;
-
-            for (var index = 1; index < dimensions.Length; index++) {
-                dimensions[index] = dimensions[index - 1] * thisArray.GetLength(rank - index);
-            }
-
-            var numberOfElements = dimensions.Last();
-
-            for (var index = 0; index < numberOfElements; index++) {
+            Func<int, int[]> indicesBy = index =>
+            {
                 var indexForDimension = lengthOfDimensions - 1;
-                var parameter = 0;
+                var parameter         = 0;
 
                 while (indexForDimension > 0) {
                     indices[parameter++] = index % dimensions[indexForDimension--] / dimensions[indexForDimension];
                 }
 
-                thisArray.SetValue(withThat(), indices);
+                return indices;
+            };
 
+            for (var index = 0; index < numberOfElements; index++) {
+                thisArray.SetValue(withThat(), indicesBy(index));
             }
+        }
+
+        private static int[] GetDimensionsFrom(Array thisArray)
+        {
+            var rank   = thisArray.Rank;
+            var length = thisArray.Rank + 1;
+
+            var result = new int[length];
+
+            result[0] = 1;
+
+            for (var index = 1; index < length; index++)
+            {
+                result[index] = result[index - 1] * thisArray.GetLength(rank - index);
+            }
+
+            return result;
+
         }
     }
 }
