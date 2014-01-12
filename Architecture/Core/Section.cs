@@ -9,12 +9,26 @@ namespace Architecture.Core
         public event PropertyChangedEventHandler PropertyChanged;
         public event ListChangedEventHandler     CardAdded;
         public event ListChangedEventHandler     CardRemoved;
+        public event EventHandler                WorkInProgressLimitExceeded;
 
         public Section()
         {
-            _id = Guid.NewGuid();
-            _lastUpdated = DateTime.Now;
-            _name = String.Empty;
+            _id                  = Guid.NewGuid();
+            _lastUpdated         = DateTime.Now;
+            _name                = String.Empty;
+            _workInProgressLimit = 0;
+        }
+
+        private readonly Guid _id;
+
+        public Guid Id {
+            get { return _id; }
+        }
+
+        private DateTime _lastUpdated;
+
+        public DateTime LastUpdated {
+            get { return _lastUpdated; }
         }
 
         private String _name;
@@ -33,7 +47,7 @@ namespace Architecture.Core
             }
         }
 
-        private int _workInProgressLimit = 0;
+        private int _workInProgressLimit;
 
         /// <summary>
         /// Defines how many card should be maximum in this section.
@@ -58,18 +72,6 @@ namespace Architecture.Core
             }
         }
 
-        private readonly Guid _id;
-
-        public Guid Id {
-            get { return _id; }
-        }
-
-        private DateTime _lastUpdated;
-
-        public DateTime LastUpdated {
-            get { return _lastUpdated; }
-        }
-
         private void OnPropertyChanged(PropertyChangedEventArgs propertyChangedEventArgs)
         {
             _lastUpdated = DateTime.Now;
@@ -89,14 +91,20 @@ namespace Architecture.Core
 
         public void Add(Card card)
         {
+            if (_cards.Exists(toFind => card.Id == toFind.Id))
+                return;
+
             _cards.Add(card);
 
-            OnCardAdded(
-                new ListChangedEventArgs(
-                    ListChangedType.ItemAdded, 
-                    _cards.IndexOf(card)
-                )
+            var eventArgs = new ListChangedEventArgs(
+                ListChangedType.ItemAdded,
+                _cards.IndexOf(card)
             );
+
+            OnCardAdded(eventArgs);
+
+            if (_cards.Count > WorkInProgressLimit)
+                OnWorkInProgressLimitExceeded(eventArgs);
         }
 
         private void OnCardAdded(ListChangedEventArgs listChangedEventArgs)
@@ -107,6 +115,14 @@ namespace Architecture.Core
                 return;
 
             CardAdded.Invoke(this, listChangedEventArgs);
+        }
+
+        private void OnWorkInProgressLimitExceeded(EventArgs eventArgs)
+        {
+            if (WorkInProgressLimitExceeded == null)
+                return;
+
+            WorkInProgressLimitExceeded.Invoke(this, eventArgs);
         }
 
         public void Remove(Card card)
@@ -120,11 +136,9 @@ namespace Architecture.Core
                 _cards.IndexOf(card)
             );
 
-
             _cards.Remove(card);
 
             OnCardRemoved(eventArgs);
-
         }
 
         private void OnCardRemoved(ListChangedEventArgs listChangedEventArgs)
