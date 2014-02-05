@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Architecture.Core 
 {
@@ -14,7 +15,6 @@ namespace Architecture.Core
             _id          = Guid.NewGuid();
             _lastUpdated = DateTime.Now;
         }
-
 
         private readonly Guid _id;
 
@@ -61,17 +61,18 @@ namespace Architecture.Core
 
         public void Remove(Section section)
         {
-            if (!_sections.Contains(section))
+            var sectionToRemove = _sections.SingleOrDefault(toFind => section.Id == toFind.Id);
+
+            if (sectionToRemove == null)
                 return;
 
             var eventArgs = new ListChangedEventArgs(
                 ListChangedType.ItemDeleted,
                 -1,
-                _sections.IndexOf(section)
+                _sections.IndexOf(sectionToRemove)
             );
 
-
-            _sections.Remove(section);
+            _sections.Remove(sectionToRemove);
 
             OnSectionRemoved(eventArgs);
         }

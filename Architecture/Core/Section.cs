@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Architecture.Core 
 {
@@ -127,16 +128,18 @@ namespace Architecture.Core
 
         public void Remove(Card card)
         {
-            if (!_cards.Contains(card))
+            var cardToRemove = _cards.SingleOrDefault(toFind => card.Id == toFind.Id);
+            
+            if (cardToRemove == null)
                 return;
 
             var eventArgs = new ListChangedEventArgs(
                 ListChangedType.ItemDeleted,
                 -1,
-                _cards.IndexOf(card)
+                _cards.IndexOf(cardToRemove)
             );
 
-            _cards.Remove(card);
+            _cards.Remove(cardToRemove);
 
             OnCardRemoved(eventArgs);
         }
