@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Architecture.Tools {
-    class Persistence {
+    class Repository {
     }
 }

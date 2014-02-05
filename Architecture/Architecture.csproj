@@ -52,7 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Builder.cs" />
     <Compile Include="Tools\Messaging.cs" />
-    <Compile Include="Tools\Persistence.cs" />
+    <Compile Include="Tools\Repository.cs" />
     <Compile Include="Tools\Serializing.cs" />
   </ItemGroup>
   <ItemGroup>
