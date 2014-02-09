@@ -43,7 +43,6 @@ namespace Architecture.Tools
             }
         }
 
-
         public T Create<T>()
         {
             if(!FactoryMethods.ContainsKey(typeof(T)))
