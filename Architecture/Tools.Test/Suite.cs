@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Architecture.Core;
 
@@ -72,6 +73,37 @@ namespace Architecture.Tools.Test
         }
 
         [Test]
+        public void DeserializeCard()
+        {
+            var serializer = new Serializing(FactoryMethods);
+
+            var data = new SerializedData
+            {
+                new Dictionary<String, String>
+                {
+                      {"Id", Guid.NewGuid().ToString()}
+                    , {"Type", "Card"}
+                    , {"Created", DateTime.Now.ToString("o")}
+                    , {"LastUpdated", DateTime.Now.ToString("o")}
+                    , {"Description", "Hello World"}
+                    , {"Requester", "Le me"}
+                    , {"Responsible", "Le not me"}
+                }
+            };
+
+            var expectedData = data.First();
+            var actualCard   = serializer.Deserialize<Card>(data);
+
+            Assert.IsNotNull(actualCard);
+
+            Assert.AreEqual(expectedData["Id"],          actualCard.Id.ToString());
+            Assert.AreEqual(expectedData["Description"], actualCard.Description);
+            Assert.AreEqual(expectedData["Requester"],   actualCard.Requester);
+            Assert.AreEqual(expectedData["Responsible"], actualCard.Responsible);
+
+        }
+
+        [Test]
         public void SerializeSection()
         {
             var facade     = Facade.Instance;
@@ -100,6 +132,33 @@ namespace Architecture.Tools.Test
         }
 
         [Test]
+        public void DeserializeSection()
+        {
+            var serializer = new Serializing(FactoryMethods);
+
+            var data = new SerializedData
+            {
+                new Dictionary<String, String>
+                {
+                      {"Id",                  Guid.NewGuid().ToString()}
+                    , {"Type",                "Section"}
+                    , {"Name",                "Le section"}
+                    , {"WorkInProgressLimit", "2"}
+                }
+            };
+
+            var expectedData  = data.First();
+            var actualSection = serializer.Deserialize<Section>(data);
+
+            Assert.IsNotNull(actualSection);
+
+            Assert.AreEqual(expectedData["Id"],                  actualSection.Id.ToString());
+            Assert.AreEqual(expectedData["Name"],                actualSection.Name);
+            Assert.AreEqual(expectedData["WorkInProgressLimit"], actualSection.WorkInProgressLimit.ToString("0"));
+
+        }
+
+        [Test]
         public void SerializeBoard()
         {
             var facade     = Facade.Instance;
@@ -120,6 +179,29 @@ namespace Architecture.Tools.Test
             var boardData = data[0];
 
             CompareActualToExpectedData(expectedData, boardData);
+        }
+
+        [Test]
+        public void DeserializeBoard()
+        {
+            var serializer = new Serializing(FactoryMethods);
+
+            var data = new SerializedData
+            {
+                new Dictionary<String, String>
+                {
+                      {"Id",   Guid.NewGuid().ToString()}
+                    , {"Type", "Board"}
+                }
+            };
+
+            var expectedData = data.First();
+            var actualBoard = serializer.Deserialize<Board>(data);
+
+            Assert.IsNotNull(actualBoard);
+
+            Assert.AreEqual(expectedData["Id"], actualBoard.Id.ToString());
+
         }
 
         private static void CompareActualToExpectedData(Dictionary<String, String> expectedData, Dictionary<String, String> actualData)

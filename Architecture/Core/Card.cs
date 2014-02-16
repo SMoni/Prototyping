@@ -11,7 +11,7 @@ namespace Architecture.Core
         {
             _id          = Guid.NewGuid();
             _created     = DateTime.Now;
-            _lastUpdated = Created;
+            _lastupdated = Created;
             
             _description = String.Empty;
             _responsible = String.Empty;
@@ -32,11 +32,11 @@ namespace Architecture.Core
             get { return _created; }
         }
 
-        private DateTime _lastUpdated;
+        private DateTime _lastupdated;
 
         public DateTime LastUpdated
         {
-            get { return _lastUpdated; }
+            get { return _lastupdated; }
         }
 
         private String _description;
@@ -89,7 +89,7 @@ namespace Architecture.Core
 
         protected void OnPropertyChanged(PropertyChangedEventArgs eventArgs)
         {
-            _lastUpdated = DateTime.Now;
+            _lastupdated = DateTime.Now;
             
             if (PropertyChanged == null)
                 return;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Architecture.Core;
 
 namespace Architecture.Tools 
@@ -156,9 +157,47 @@ namespace Architecture.Tools
 
         private Card DeserializeCard(SerializedData toDeserialize)
         {
+            var dataForCard = toDeserialize.FirstOrDefault();
+
+            if (dataForCard == null)
+                throw new ArgumentNullException();
+            
             var result = _factoryMethods[typeof(Card)]() as Card;
 
+            if (result == null)
+                throw new ArgumentNullException();
+
+            GetFieldInfoBy("Id",          result.GetType()).SetValue(result, Guid.Parse(dataForCard["Id"]));
+            GetFieldInfoBy("Created",     result.GetType()).SetValue(result, DateTime.Parse(dataForCard["Created"]));
+            GetFieldInfoBy("LastUpdated", result.GetType()).SetValue(result, DateTime.Parse(dataForCard["LastUpdated"]));
+            GetFieldInfoBy("Description", result.GetType()).SetValue(result, dataForCard["Description"]);
+            GetFieldInfoBy("Requester",   result.GetType()).SetValue(result, dataForCard["Requester"]);
+            GetFieldInfoBy("Responsible", result.GetType()).SetValue(result, dataForCard["Responsible"]);
+
             return result;
+        }
+
+        protected static String       MEMBER_PREFIX = "_";
+        protected static BindingFlags MEMBER_BINDINGFLAGS = BindingFlags.Instance |
+                                                              BindingFlags.NonPublic;
+
+        protected static BindingFlags PROPERTY_BINDINGFLAGS = BindingFlags.Instance |
+                                                              BindingFlags.Public |
+                                                              BindingFlags.FlattenHierarchy;
+
+        protected virtual FieldInfo GetFieldInfoBy(String key, Type thisType)
+        {
+
+            FieldInfo result = null;
+
+            while ((thisType != null) && (result == null))
+            {
+                result = thisType.GetField(MEMBER_PREFIX + key.ToLower(), MEMBER_BINDINGFLAGS);
+                thisType = thisType.BaseType;
+            }
+
+            return result;
+
         }
 
     }
