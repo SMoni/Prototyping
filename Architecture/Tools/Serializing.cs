@@ -16,18 +16,13 @@ namespace Architecture.Tools
             _factoryMethods = factoryMethods;
         }
 
-        private Func<Object> FindFactoryMethodBy(String typeAsString)
-        {
-            return _factoryMethods.FirstOrDefault(pair => pair.Key.Name == typeAsString).Value;
-        }
-
         private Dictionary<Type, Func<Object, SerializedData>> _serializeMethods;
 
         private Dictionary<Type, Func<Object, SerializedData>> SerializeMethods
         {
             get
             {
-                return _serializeMethods ?? (_serializeMethods = new Dictionary<Type, Func<object, SerializedData>>
+                return _serializeMethods ?? (_serializeMethods = new Dictionary<Type, Func<Object, SerializedData>>
                 {
                       { typeof(Card),    o => Serialize(o as Card) }
                     , { typeof(Section), o => Serialize(o as Section) }
@@ -107,9 +102,63 @@ namespace Architecture.Tools
 
         }
 
-        public T Deserialize<T>(String[] toDeserialize)
+        private Dictionary<Type, Func<SerializedData, Object>> _deserializeMethods;
+
+        private Dictionary<Type, Func<SerializedData, Object>> DeserializeMethods
         {
-            return default(T);
+            get
+            {
+                return _deserializeMethods ?? (_deserializeMethods = new Dictionary<Type, Func<SerializedData, Object>>
+                {
+                      { typeof(Card),    DeserializeCard }
+                    , { typeof(Section), DeserializeSection }
+                    , { typeof(Board),   DeserializeBoard }
+                });
+            }
+        }
+
+        public T Deserialize<T>(SerializedData toDeserialize)
+        {
+            var typeOfT = typeof(T);
+
+            var firstEntry = toDeserialize.FirstOrDefault();
+
+            if (firstEntry == null)
+                throw new ArgumentNullException();
+
+            if (!firstEntry.ContainsKey("Type"))
+                throw new ArgumentException();
+
+            var typeName = firstEntry["Type"];
+
+            if (typeOfT.Name != typeName)
+                throw new ArgumentException();
+
+            if (!DeserializeMethods.ContainsKey(typeOfT))
+                throw new NotImplementedException();
+
+            return (T)DeserializeMethods[typeOfT](toDeserialize);
+        }
+
+        private Board DeserializeBoard(SerializedData toDeserialize)
+        {
+            var result = _factoryMethods[typeof(Board)]() as Board;
+
+            return result;
+        }
+
+        private Section DeserializeSection(SerializedData toDeserialize)
+        {
+            var result = _factoryMethods[typeof(Section)]() as Section;
+
+            return result;
+        }
+
+        private Card DeserializeCard(SerializedData toDeserialize)
+        {
+            var result = _factoryMethods[typeof(Card)]() as Card;
+
+            return result;
         }
 
     }

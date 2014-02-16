@@ -13,8 +13,8 @@ namespace Architecture.Tools
 
         public T Load<T>(Guid id)
         {
-            //Load data as String[] from whereever
-            var data = new String[] {};
+            //Load data as SerializedData from whereever
+            var data = new SerializedData { };
 
             return _serializer.Deserialize<T>(data);
         }
