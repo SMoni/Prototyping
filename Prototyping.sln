@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FillingArrayWithLoop", "FillingArrayWithLoop\FillingArrayWithLoop.csproj", "{B9DCB2D8-1CBC-4BA6-A5D1-5A54152A1433}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Architecture", "Architecture\Architecture.csproj", "{0AD8B279-D68C-49DF-BDD9-515C75F6D3EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serializing", "Serializing\Serializing.csproj", "{61192E73-A16D-44E0-B324-3B69D2563A1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{B9DCB2D8-1CBC-4BA6-A5D1-5A54152A1433}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9DCB2D8-1CBC-4BA6-A5D1-5A54152A1433}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9DCB2D8-1CBC-4BA6-A5D1-5A54152A1433}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0AD8B279-D68C-49DF-BDD9-515C75F6D3EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AD8B279-D68C-49DF-BDD9-515C75F6D3EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0AD8B279-D68C-49DF-BDD9-515C75F6D3EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0AD8B279-D68C-49DF-BDD9-515C75F6D3EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61192E73-A16D-44E0-B324-3B69D2563A1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61192E73-A16D-44E0-B324-3B69D2563A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61192E73-A16D-44E0-B324-3B69D2563A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61192E73-A16D-44E0-B324-3B69D2563A1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
